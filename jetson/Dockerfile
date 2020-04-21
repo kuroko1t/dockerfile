@@ -40,5 +40,11 @@ RUN git clone https://github.com/tensorflow/addons.git && \
     bazel-bin/build_pip_pkg artifacts && \
     pip3 install artifacts/tensorflow_addons-*.whl
 
+# install onnxruntime
+RUN git clone --recursive https://github.com/microsoft/onnxruntime.git && \
+    cd onnxruntime && sed -e 's/-Wall//' cmake/CMakeLists.txt && \
+    ./build.sh --cuda_home /usr/local/cuda --cudnn_home /usr/lib/aarch64-linux-gnu --use_cuda --config MinSizeRel --build_wheel --update --build  --parallel && \
+    pip3 install ./build/Linux/MinSizeRel/dist/onnxruntime_gpu-*.whl
+
 # install onnx-tf
 RUN pip3 install git+https://github.com/onnx/onnx-tensorflow
